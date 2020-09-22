@@ -9,19 +9,17 @@ import time
 class Container(QtWidgets.QTabWidget):
     def __init__(self):
         QtWidgets.QTabWidget.__init__(self)
-        self.embed('xterm')
+        self.embed()
 
-    def embed(self, command, *args):
+    def embed(self):
         self.name_session = uuid.uuid4().hex
         proc = QtCore.QProcess()
-        proc.setProgram(command)
-        proc.setArguments(args)
 
         started, procId = QtCore.QProcess.startDetached(
             "xterm", ["-e", "tmux", "new", "-s", self.name_session], "."
         )
         if not started:
-            QtWidgets.QMessageBox.critical(self, 'Command "{}" not started!'.format(command), "Eh")
+            QtWidgets.QMessageBox.critical(self, 'Process not started', "Eh")
             return
         attempts = 0
         while attempts < 10:
@@ -41,7 +39,7 @@ class Container(QtWidgets.QTabWidget):
                     win32w.setFlags(QtCore.Qt.FramelessWindowHint)
                     widg = QtWidgets.QWidget.createWindowContainer(win32w)
 
-                    self.addTab(widg, command)
+                    self.addTab(widg, 'abc')
                     self.resize(500, 400) # set initial size of window
                     return
             attempts += 1
